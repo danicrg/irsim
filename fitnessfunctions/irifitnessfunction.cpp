@@ -78,11 +78,16 @@ void CIriFitnessFunction::SimulationStep(unsigned int n_simulation_step, double 
 
 	/* Eval maximum speed partial fitness */
 	double maxSpeedEval = (fabs(leftSpeed - 0.5) + fabs(rightSpeed - 0.5));
+	double minSpeedEval = 1-maxSpeedEval;
 
 	/* Eval same direction partial fitness */
 	double sameDirectionEval = 1 - sqrt(fabs(leftSpeed - rightSpeed));
+	double goForward = (rightSpeed + leftSpeed)/2;
 	
 	/* Eval SENSORS */
+	/* entre 1 y 0, cuanto mas se aproxima a 1 esta mejor dirigido hacia la luz*/
+	double LightDirection = 0.0;
+	double OpositeLightDirection = 0.0;
 
 	/* Where the Max PROXIMITY sensor will be stored*/
 	double maxProxSensorEval 		= 0.0;
@@ -110,6 +115,7 @@ void CIriFitnessFunction::SimulationStep(unsigned int n_simulation_step, double 
 	double blueLightS7=0;
 	double lightS0=0;
 	double lightS7=0;
+	double suma = 0.0;
 
 	/* Auxiluar variables */
 	unsigned int unThisSensorsNumberOfInputs; 
@@ -162,6 +168,7 @@ void CIriFitnessFunction::SimulationStep(unsigned int n_simulation_step, double 
 				/* For every input */
 				for (int j = 0; j < unThisSensorsNumberOfInputs; j++)
 				{
+					suma += pfThisSensorInputs[j];
 					/* If reading bigger than maximum */
 					if ( pfThisSensorInputs[j] > maxLightSensorEval )
 					{	
@@ -172,7 +179,15 @@ void CIriFitnessFunction::SimulationStep(unsigned int n_simulation_step, double 
 						lightS0 = pfThisSensorInputs[j];
 					else if (j==7)
 						lightS7 = pfThisSensorInputs[j];
+					else if(j==1)
+						OpositeLightDirection += pfThisSensorInputs[j];
+					else if(j==6)
+						OpositeLightDirection += pfThisSensorInputs[j];
+
+					LightDirection = (lightS7+lightS0)/suma;
+					OpositeLightDirection /= suma;
 				}
+
 				break;
 			case SENSOR_REAL_BLUE_LIGHT:
 				unThisSensorsNumberOfInputs = (*i)->GetNumberOfInputs();
@@ -238,10 +253,11 @@ void CIriFitnessFunction::SimulationStep(unsigned int n_simulation_step, double 
 		}
 	}
 	
-	/* FROM HERE YOU NEED TO CREATE YOU FITNESS */	
+	/* FROM HERE YOU NEED TO CREATE YOU FITNESS */
+	double StopTime = 0.0;
+	if(maxLightSensorEval > 0.9){StopTime = 1.0;}
 
-	double fitness = 1.0;
-	
+	double fitness = (maxSpeedEval*sameDirectionEval+3*maxLightSensorEval)*(1.0-StopTime)/4 + 3*(1-maxSpeedEval)*StopTime;
 	/* TO HERE YOU NEED TO CREATE YOU FITNESS */	
 
 	m_unNumberOfSteps++;

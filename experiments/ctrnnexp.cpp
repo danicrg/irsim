@@ -38,47 +38,47 @@ using namespace std;
 
 /*Create Arena */
 static char* pchHeightMap = 
-"%%%%%%%%%%%%%%%%%%%%"
-"%##################%"
-"%##################%"
-"%##################%"
-"%##################%"
-"%##################%"
-"%##################%"
-"%##################%"
-"%##################%"
-"%##################%"
-"%##################%"
-"%##################%"
-"%##################%"
-"%##################%"
-"%##################%"
-"%##################%"
-"%##################%"
-"%##################%"
-"%##################%"
-"%%%%%%%%%%%%%%%%%%%%";
+// "%%%%%%%%%%%%%%%%%%%%"
+// "%##################%"
+// "%##################%"
+// "%##################%"
+// "%##################%"
+// "%##################%"
+// "%##################%"
+// "%##################%"
+// "%##################%"
+// "%##################%"
+// "%##################%"
+// "%##################%"
+// "%##################%"
+// "%##################%"
+// "%##################%"
+// "%##################%"
+// "%##################%"
+// "%##################%"
+// "%##################%"
+// "%%%%%%%%%%%%%%%%%%%%";
 
-//"%%%%%%%%%%%%%%%%%%%%"
-//"%##################%"
-//"%##################%"
-//"%##########%#######%"
-//"%##########%#######%"
-//"%#%%%######%#######%"
-//"%############%%%###%"
-//"%##################%"
-//"%##########%#######%"
-//"%###########%%%%%##%"
-//"%##################%"
-//"%%%%%%#############%"
-//"%##################%"
-//"%##################%"
-//"%#####%%###########%"
-//"%#####%%###########%"
-//"%#####%%%%%########%"
-//"%##################%"
-//"%##################%"
-//"%%%%%%%%%%%%%%%%%%%%";
+"%%%%%%%%%%%%%%%%%%%%"
+"%######%####%######%"
+"%###%#########%####%"
+"%%#################%"
+"%#####%###%####%###%"
+"%##################%"
+"%###%######%####%##%"
+"%###############%##%"
+"%##%##%%####%######%"
+"%##################%"
+"%#############%%###%"
+"%%%################%"
+"%#####%############%"
+"%##########%%######%"
+"%##################%"
+"%###%%#####%####%##%"
+"%###############%##%"
+"%#######%##########%"
+"%#############%####%"
+"%%%%%%%%%%%%%%%%%%%%";
 
 //"%%%%%%%%%%%%%%%%%%%%"
 //"%##################%"
@@ -646,7 +646,7 @@ CArena* CCTRNNExp::CreateArena()
 {
 	/* Create Arena */
 	CArena* pcArena = NULL;
-	pcArena = new CProgrammedArena("CProgrammedArena", 20, 20, 3.0, 3.0);
+	pcArena = new CProgrammedArena("CProgrammedArena", 20, 20, 5.0, 5.0);
 	((CProgrammedArena*)pcArena)->SetHeightPixelsFromChars(pchHeightMap, ' ', '#', '%');
 
 	/* Create and add Light Object */
@@ -890,58 +890,100 @@ void CCTRNNExp::Reset ( void )
 
 void CCTRNNExp::RandomPositionAndOrientation ( void )
 {
-	TEpuckVector* vEpucks=m_pcSimulator->GetEpucks();
-	TEpuckIterator it=(*vEpucks).begin();
+    TEpuckVector* vEpucks=m_pcSimulator->GetEpucks();
+    TEpuckIterator it=(*vEpucks).begin();
 
-	int i;
-	while(it!=(*vEpucks).end()){                        
-		(*it)->SetCollisions(0);
-		
-		double randomX;
-		double randomY;
-		int robotsMounted;
-		double dist;
+    int i;
+    while(it!=(*vEpucks).end()){                        
+        (*it)->SetCollisions(0);
+        
+        double randomX;
+        double randomY;
+        int robotsMounted;
+        double dist;
 
-		//int initAreaRadius = 1.5;
-		if (m_nRobotsNumber > 1 )
-		{
-			do
-			{
-				robotsMounted = 0;
+        //int initAreaRadius = 1.5;
+        if (m_nRobotsNumber > 1 )
+        {
+            do
+            {
+                robotsMounted = 0;
 
-				randomX = ( Random::nextDouble() * m_fInitAreaX * 2.0 ) - m_fInitAreaX;
-				randomY = ( Random::nextDouble() * m_fInitAreaY * 2.0 ) - m_fInitAreaY;
-				dist = sqrt(randomX*randomX + randomY*randomY);
+                randomX = ( Random::nextDouble() * m_fInitAreaX * 2.0 ) - m_fInitAreaX;
+                randomY = ( Random::nextDouble() * m_fInitAreaY * 2.0 ) - m_fInitAreaY;
+                dist = sqrt(randomX*randomX + randomY*randomY);
 
-				for (TEpuckIterator j = vEpucks->begin() ; j != vEpucks->end() ; j ++){
-					float aux1 = (*j)->GetPosition().x - randomX;
-					float aux2 = (*j)->GetPosition().y - randomY;
+                for (TEpuckIterator j = vEpucks->begin() ; j != vEpucks->end() ; j ++){
+                    float aux1 = (*j)->GetPosition().x - randomX;
+                    float aux2 = (*j)->GetPosition().y - randomY;
 
-					float dist2 = sqrt(aux1*aux1 + aux2*aux2);
+                    float dist2 = sqrt(aux1*aux1 + aux2*aux2);
 
-					if( dist2 < 2 * (CEpuck::CHASSIS_RADIUS) ) { robotsMounted = 1; }
-				}
-			}	
-			while (robotsMounted == 1);
-		}
+                    if( dist2 < 2 * (CEpuck::CHASSIS_RADIUS) ) { robotsMounted = 1; }
+                }
+            }   
+            while (robotsMounted == 1);
+        }
 
-		else
-		{
-				randomX = ( Random::nextDouble() * m_fInitAreaX * 2.0 ) - m_fInitAreaX;
-				randomY = ( Random::nextDouble() * m_fInitAreaY * 2.0 ) - m_fInitAreaY;
-		}
+        else
+        {
+                randomX = 0.0; //( Random::nextDouble() * m_fInitAreaX * 2.0 ) - m_fInitAreaX;
+                randomY = 0.0; //( Random::nextDouble() * m_fInitAreaY * 2.0 ) - m_fInitAreaY;
+        }
 
-		(*it)->SetPosition(randomX, randomY);
+        (*it)->SetPosition(randomX, randomY);
 
-		float fInitialHeading=Random::nextDouble(-M_PI/2,M_PI/2);
-		(*it)->SetRotation(fInitialHeading);                 
+        float fInitialHeading=Random::nextDouble(-M_PI/2,M_PI/2);
+        (*it)->SetRotation(fInitialHeading);                 
 
-		//printf("X: %2f, Y: %2f, O: %2f\n", randomX, randomY, fInitialHeading);
-		((CCollisionEpuck*)(*it))->UpdateCollisionPosition();
-		
-		it++;
-		i++;
-	}
+        /*printf("X: %2f, Y: %2f, O: %2f\n", randomX, randomY, fInitialHeading);*/
+        ((CCollisionEpuck*)(*it))->UpdateCollisionPosition();
+        /*double f_discharge_coef = 0.0005+Random::nextDouble()*0.0095;
+        CBatterySensor* battery = (CBatterySensor*) (*it)->GetSensor(SENSOR_BATTERY);
+        battery->SetBatteryDischargeCoef(f_discharge_coef);*/
+        /*printf("baterry coef: %2f\n", f_discharge_coef);*/
+        
+        it++;
+        i++;
+    }
+    /* CODE FOR Garbage - Exp 8a */
+  CArena* pc_arena=m_pcSimulator->GetArena();
 
-	m_pcCollisionManager->Reset();
+  /* Get a random x,y pair for all blueLightObjets */
+  dVector2 vCenter[m_nBlueLightObjectNumber+m_nLightObjectNumber];
+  for( int i = 0 ; i < m_nBlueLightObjectNumber+m_nLightObjectNumber ; i++)
+  {
+    vCenter[i].x = ( Random::nextDouble() * m_fInitAreaX * 2.0 ) - m_fInitAreaX;
+    vCenter[i].y = ( Random::nextDouble() * m_fInitAreaY * 2.0 ) - m_fInitAreaY;
+  }
+
+  /* DEBUG */
+/*  for( int i = 0 ; i < m_nBlueLightObjectNumber+m_nLightObjectNumber  ; i++){
+  printf("RandomCenter %d: %2f, %2f\n", i, vCenter[i].x, vCenter[i].y);}*/
+  /* END DEBUG */
+
+  int nCounter = 0;
+
+  //Set all bluelightobjets on the x,y pair of bluelightobjets 
+ /* vector<CBlueLightObject*> vBlueLightObject=pc_arena->GetBlueLightObject();
+  vector<CBlueLightObject*>::iterator it_bluelightobject=vBlueLightObject.begin();*/
+  vector<CLightObject*> vLightObject=pc_arena->GetLightObject();
+  vector<CLightObject*>::iterator it_lightobject=vLightObject.begin();
+
+/*  while(it_bluelightobject!=vBlueLightObject.end())
+  {
+    (*it_bluelightobject)->SetCenter(vCenter[nCounter]);
+    nCounter++;
+    it_bluelightobject++;
+  }*/
+
+  while(it_lightobject!=vLightObject.end())
+  {
+    (*it_lightobject)->SetCenter(vCenter[nCounter]);
+    nCounter++;
+    it_lightobject++;
+  }
+  /* END CODE FOR Garbage - Exp 8a */
+
+    m_pcCollisionManager->Reset();
 }

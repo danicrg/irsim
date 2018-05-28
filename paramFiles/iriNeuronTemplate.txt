@@ -14,8 +14,8 @@ RUN TIME												= 10000
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 NUMBER OF LIGHT OBJECTS  			= 1
-RED LIGHT 1: X POSITION										= 2
-RED LIGHT 1: Y POSITION										= -2
+LIGHT 1: X POSITION										= 2
+LIGHT 1: Y POSITION										= 2
 NUMBER OF BLUE LIGHT OBJECTS  = 0
 NUMBER OF RED LIGHT OBJECTS  = 0
 NUMBER OF GROUND AREA					= 0
@@ -53,7 +53,7 @@ GROUND SENSORS USED     (3 sensors: 0 OFF, 1 ON)  = 1 1 1
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 CHROMOSOME LENGTH 												= 34
-POPULATION SIZE														= 101
+POPULATION SIZE														= 71
 NUMBER OF GENERATIONS											= 10001	
 EVALUATION TIME														= 300
 DO CROSSOVER ( 0 No, 1 Yes )							= 1
@@ -63,7 +63,7 @@ MUTATION RATE															= 0.05
 NUMBER OF ELITES													= 5
 FITNESS FUNCTION													= 4
 SAMPLES PER CHORMOSOME										= 30
-RANDOM POSITION ORIENTATION (0 NO, 1 YES) = 1
+RANDOM POSITION ORIENTATION (0 NO, 1 YES) = 0
 RANDOM INIT AREA X								=2
 RANDOM INIT AREA Y								=2
 
